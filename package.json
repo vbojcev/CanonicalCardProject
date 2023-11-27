@@ -1,13 +1,23 @@
 {
+  "name": "canonicalproject",
+  "description": "",
+  "version": "1.0.0",
+  "private": true,
+  "author": "vbojcev",
+  "license": "ISC",
   "dependencies": {
     "sass": "^1.69.5",
     "vanilla-framework": "^4.5.0"
   },
   "scripts": {
-    "build-css": "sass -w --load-path=node_modules src:dist --style=compressed",
-    "watch-css": "npm run build-css && sass --load-path=node_modules -w src:dist --style=compressed"
+    "build-css": "sass --load-path=node_modules src:dist --style=compressed",
+    "watch-css": "npm run build-css && sass --load-path=node_modules -w src:dist --style=compressed",
+    "dev": "npm run build-css && webpack serve --mode=development"
   },
   "devDependencies": {
-    "prettier": "3.1.0"
+    "prettier": "3.1.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   }
 }
