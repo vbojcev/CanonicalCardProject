@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "sass": "^1.69.5",
+    "vanilla-framework": "^4.5.0"
+  },
+  "scripts": {
+    "build-css": "sass -w --load-path=node_modules src:dist --style=compressed",
+    "watch-css": "npm run build-css && sass --load-path=node_modules -w src:dist --style=compressed"
+  },
+  "devDependencies": {
+    "prettier": "3.1.0"
+  }
+}
