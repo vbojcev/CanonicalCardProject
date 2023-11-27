@@ -57,7 +57,7 @@ const card = (content) => {
   contentDiv.appendChild(titleLink);
 
   // ByLine creation
-  let authorLink = 'authorLink';
+  let authorLink = content._embedded.author[0].link;
   let authorName = content._embedded.author[0].name;
   let date = new Date(content.date);
   let byLine = document.createElement('p');
