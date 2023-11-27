@@ -15,38 +15,102 @@ const fetchBlogs = async () => {
 // Given blog information, create "card" element.
 // Input: single blog data
 const card = (content) => {
-  let newDiv = document.createElement('div');
-  newDiv.setAttribute('id', String(content.id));
-  newDiv.innerHTML = content.title.rendered;
-  return newDiv;
+  // Initialize card
+  let card = document.createElement('div');
+  card.setAttribute('class', 'col-4 col-medium-2 p-card--highlighted');
+  card.setAttribute('id', String(content.id));
+
+  // Header for Topic -- Noticed it may not exist!!!
+  /*----------------------------------------------------------*/
+  let topic = '';
+  content.topic.length == 1
+    ? (topic = content['_embedded']['wp:term'][2][0].name)
+    : (topic = 'General');
+
+  let header = document.createElement('header');
+  header.setAttribute('class', 'p-card__header p-card__inner');
+  let headerText = document.createElement('h5');
+  headerText.innerHTML = topic;
+  header.appendChild(headerText);
+  /*----------------------------------------------------------*/
+  card.appendChild(header);
+
+  // Main card content: Picture, Title, Byline
+  /*----------------------------------------------------------*/
+  let contentDiv = document.createElement('div');
+  contentDiv.setAttribute('class', 'p-card__inner');
+  let link = content.link;
+
+  // Image creation
+  let imageLink = document.createElement('a');
+  imageLink.setAttribute('href', link);
+  let imageSource = content.featured_media;
+  let image = document.createElement('img');
+  image.setAttribute('class', 'p-card__image');
+  image.setAttribute('alt', '');
+  image.setAttribute('src', imageSource);
+  imageLink.appendChild(image);
+  contentDiv.appendChild(imageLink);
+
+  // Title creation
+  let title = content.title.rendered;
+  let titleLink = document.createElement('h4');
+  titleLink.innerHTML = `<a href="${link}">${title}</a>`;
+  contentDiv.appendChild(titleLink);
+
+  // ByLine creation
+  let authorLink = 'authorLink';
+  let authorName = content._embedded.author[0].name;
+  let date = new Date(content.date);
+  let byLine = document.createElement('p');
+  let blItalic = document.createElement('em');
+  blItalic.innerHTML = `By <a href="${authorLink}">${authorName}</a> on ${date.toLocaleString(
+    'en-gb',
+    {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    }
+  )}`;
+  byLine.appendChild(blItalic);
+  contentDiv.appendChild(byLine);
+  /*----------------------------------------------------------*/
+  card.appendChild(contentDiv);
+
+  // Footer
+  let category = content['_embedded']['wp:term'][0][0].name;
+  let footer = document.createElement('p');
+  footer.setAttribute('class', 'p-card__footer p-card__inner');
+  footer.innerHTML = category;
+  card.appendChild(footer);
+
+  return card;
 };
 
 // Render all cards given an array of them and the container they should belong to.
-// Type of 'container' is a DOM element.
-const renderCards = (contentArray, containerID) => {
+// Limit allows it to render only a select number of cards (mainly for testing purposes).
+const renderCards = (contentArray, containerID, limit) => {
   const container = document.getElementById(containerID);
-  for (let i = 0; i < contentArray.length; i++) {
-    container.appendChild(card(contentArray[i]));
+
+  if (container) {
+    for (
+      let i = 0;
+      i < (contentArray.length < limit ? contentArray.length : limit);
+      i++
+    ) {
+      container.appendChild(card(contentArray[i]));
+    }
+  } else {
+    console.error('Invalid container ID.');
   }
 };
 
-// Testing Code
-
-const testData = getTestData(); // Will be static local array of example API output
-
-//renderCards(testData, 'cardContainer');
+// Fetch, then display data.
 
 fetchBlogs()
   .then((data) => {
-    renderCards(data, 'cardContainer');
+    data
+      ? renderCards(data, 'cardContainer', 3)
+      : console.error('No post data.');
   })
   .catch((e) => console.error(e));
-
-//console.log(testData);
-
-/*fetchBlogs()
-  .then((res) => {
-    data = res;
-    console.log(data);
-  })
-  .catch((e) => console.error(e));*/
