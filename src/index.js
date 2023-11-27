@@ -1,5 +1,3 @@
-import { getTestData } from './testData.js';
-
 const fetchBlogs = async () => {
   const res = await fetch(
     'https://people.canonical.com/~anthonydillon/wp-json/wp/v2/posts.json'
