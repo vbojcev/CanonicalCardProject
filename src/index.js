@@ -34,11 +34,13 @@ const renderCards = (contentArray, containerID) => {
 
 const testData = getTestData(); // Will be static local array of example API output
 
-//const container = document.querySelector('cardContainer');
+//renderCards(testData, 'cardContainer');
 
-renderCards(testData, 'cardContainer');
-
-//fetchBlogs().then((data) => {});
+fetchBlogs()
+  .then((data) => {
+    renderCards(data, 'cardContainer');
+  })
+  .catch((e) => console.error(e));
 
 //console.log(testData);
 
